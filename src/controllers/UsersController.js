@@ -15,7 +15,7 @@ class UsersController {
     }
 
     res.status(201).json({ message: "Usuario criado com sucesso", error: false, data: { name, email } });
-  }
+  } 
 } 
 
 module.exports = UsersController;
