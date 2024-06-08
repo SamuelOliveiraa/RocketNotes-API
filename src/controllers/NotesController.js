@@ -25,7 +25,7 @@ class NotesController {
        
     
     //CRIA A NOTA
-    const note = {
+    const note = { 
       id: uuidv4(), // Gera um UUID
       user_id,
       title,
