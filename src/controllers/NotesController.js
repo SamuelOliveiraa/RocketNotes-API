@@ -22,7 +22,7 @@ class NotesController {
     if (links.length === 0 || links.length === 0) {
       return res.status(400).send({ message: "Por favor, preencha pelo menos com um link e com uma tag", error: true });
     }
-   
+    
 
     //CRIA A NOTA
     const note = {
