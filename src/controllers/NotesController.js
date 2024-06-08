@@ -23,7 +23,7 @@ class NotesController {
       return res.status(400).send({ message: "Por favor, preencha pelo menos com um link e com uma tag", error: true });
     }
        
-   
+    
     //CRIA A NOTA
     const note = {
       id: uuidv4(), // Gera um UUID
