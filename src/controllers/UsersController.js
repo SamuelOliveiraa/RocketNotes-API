@@ -9,6 +9,11 @@ class UsersController {
     const { name, email, password } = req.body;
 
     // TRATAMENTO DE ERROS
+    if (name === undefined || email === undefined || password === undefined) {
+      return res.status(400).send({ message: "Por favor, preencha todos os campos.", error: true });
+    }
+
+    // TRATAMENTO DE ERROS
     if (name === "" || email === "" || password === "") {
       return res.status(400).send({ message: "Por favor, preencha todos os campos.", error: true });
     }
@@ -47,6 +52,9 @@ class UsersController {
     if (!user) {
       return res.status(400).send({ message: "Usuario não existe, por favor crie uma conta", error: true });
     }
+    if (password.length < 6) {
+      return res.status(400).send({ message: "A senha precisa ter pelo menos 6 caracters", error: true });
+    }
 
     const comparedPassword = await compare(password, user.password);
 
@@ -54,7 +62,7 @@ class UsersController {
       const token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "1h" });
       return res.json({ message: "Login feito com sucesso!", error: false, token });
     } else {
-      return res.status(400).send({ message: "A senha ou o e-mail não conferem", error: true });
+      return res.status(400).send({ message: "Senha incorreta!!", error: true });
     }
   }
 
