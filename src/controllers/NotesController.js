@@ -19,24 +19,28 @@ class NotesController {
     }
 
     // TRATAMENTO DE ERROS
-    if (links.length === 0 || links.length === 0) {
+    if (links.length === 0 || tags.length === 0) {
       return res.status(400).send({ message: "Por favor, preencha pelo menos com um link e com uma tag", error: true });
     }
-       
-    
+    const allLinks = JSON.stringify(links);
+    const allTags = JSON.stringify(tags);
     //CRIA A NOTA
-    const note = { 
+    const note = {
       id: uuidv4(), // Gera um UUID
       user_id,
       title,
       description,
-      links,
-      tags
+      links: allLinks,
+      tags: allTags
     };
 
     await db("notes").insert(note);
 
     res.status(201).json({ message: "Nota inserida com sucesso", error: false, data: note });
+  }
+
+  async get(req, res) {
+    
   }
 }
 
