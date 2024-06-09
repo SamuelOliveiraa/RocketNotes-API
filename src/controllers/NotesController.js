@@ -40,7 +40,48 @@ class NotesController {
   }
 
   async get(req, res) {
-    
+    const { user_id } = req.params;
+
+    const notes = await db("notes").where({ user_id });
+
+    notes.map(note => {
+      note.links = JSON.parse(note.links);
+      note.tags = JSON.parse(note.tags);
+    });
+
+    res.json(notes);
+  }
+
+  async getById(req, res) {
+    const { id } = req.params;
+
+    const note = await db("notes").where({ id }).first();
+
+    note.links = JSON.parse(note.links);
+    note.tags = JSON.parse(note.tags);
+
+    res.json(note);
+  }
+
+  async search(req, res) {
+    const { text } = req.params;
+
+    const notes = await db("notes").where("title", "like", `%${text}%`).orWhere("description", "like", `%${text}%`).orWhere("tags", "like", `%${text}%`);
+
+    notes.map(note => {
+      note.links = JSON.parse(note.links);
+      note.tags = JSON.parse(note.tags);
+    });
+
+    res.send(notes);
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    await db("notes").where({ id }).delete();
+
+    res.status(204).json({ message: "Nota excluída com sucesso", error: false });
   }
 }
 
