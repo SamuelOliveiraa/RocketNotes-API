@@ -56,7 +56,6 @@ class NotesController {
     const { id } = req.params;
 
     const note = await db("notes").where({ id }).first();
-
     note.links = JSON.parse(note.links);
     note.tags = JSON.parse(note.tags);
 
@@ -66,7 +65,7 @@ class NotesController {
   async search(req, res) {
     const { text } = req.params;
 
-    const notes = await db("notes").where("title", "like", `%${text}%`).orWhere("description", "like", `%${text}%`).orWhere("tags", "like", `%${text}%`);
+    const notes = await db("notes").where("title", "like", `%${text}%`).orWhere("tags", "like", `%${text}%`);
 
     notes.map(note => {
       note.links = JSON.parse(note.links);
@@ -79,9 +78,18 @@ class NotesController {
   async delete(req, res) {
     const { id } = req.params;
 
-    await db("notes").where({ id }).delete();
+    try {
+      const result = await db("notes").where({ id }).delete();
 
-    res.status(204).json({ message: "Nota excluída com sucesso", error: false });
+      if (result) {
+        res.status(202).json({ message: "Nota excluída com sucesso", error: false });
+      } else {
+        res.status(404).json({ message: "Nota não encontrada", error: true });
+      }
+    } catch (error) {
+      console.error("Erro ao excluir nota:", error);
+      res.status(500).json({ message: "Erro ao excluir nota", error: true });
+    }
   }
 }
 
