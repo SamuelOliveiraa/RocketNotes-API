@@ -33,15 +33,20 @@ class UsersController {
     // CRIPTOGRAFA A SENHA DO USUARIO
     const hashedPassword = await hash(password, 8);
 
+    const createdId = uuidv4();
+
     //CRIA O USUARIO
     await db("users").insert({
-      id: uuidv4(), // Gera um UUID
+      id: createdId, // Gera um UUID
       name,
       email,
       password: hashedPassword
     });
 
-    res.status(201).json({ message: "Usuario criado com sucesso", error: false, data: { name, email } });
+    const token = jwt.sign({ id: createdId }, SECRET_KEY, { expiresIn: "1h" });
+    return res.json({ message: "Usuario criado com sucesso!", error: false, token });
+    /* 
+    res.status(201).json({ message: "Usuario criado com sucesso", error: false, data: { name, email } }); */
   }
 
   async login(req, res) {
