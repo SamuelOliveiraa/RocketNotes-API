@@ -78,6 +78,33 @@ class UsersController {
 
     res.json(user);
   }
+
+  async update(req, res) {
+    const { name, email, actualPassword, newPassword } = req.body;
+    const { id } = req.params;
+    const user = await db("users").where({ id }).first();
+
+    if (name === "" || email === "" || actualPassword === "") {
+      return res.status(400).send({ message: "Por favor preencha todos os campos!! ", error: true });
+    }
+    const comparedPassword = await compare(actualPassword, user.password);
+
+    if (comparedPassword) {
+      if (newPassword === "") {
+        const hashedPassword = await hash(actualPassword, 8);
+
+        await db("users").where({ id }).update({ name, email, password: hashedPassword });
+      } else {
+        const hashedPassword = await hash(newPassword, 8);
+
+        await db("users").where({ id }).update({ name, email, password: hashedPassword });
+      }
+
+      return res.status(400).send({ message: "Dados atualizados com sucesso!", error: false });
+    } else {
+      return res.status(400).send({ message: "Senha incorreta!", error: true });
+    }
+  }
 }
 
 module.exports = UsersController;

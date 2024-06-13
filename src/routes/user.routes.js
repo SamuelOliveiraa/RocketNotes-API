@@ -26,6 +26,8 @@ const authenticateJWT = (req, res, next) => {
 
 usersRoutes.post("/", usersController.create);
 usersRoutes.post("/login", usersController.login);
+
 usersRoutes.get("/", authenticateJWT, usersController.get);
+usersRoutes.put("/:id", authenticateJWT, usersController.update);
 
 module.exports = usersRoutes;
