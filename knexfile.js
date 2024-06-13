@@ -12,6 +12,13 @@ module.exports = {
     },
     migrations: {
       directory: path.resolve(__dirname, "src", "database", "knex", "migrations")
+    },
+    production: {
+      client: "sqlite3",
+      connection: {
+        filename: "./prod.sqlite3"
+      },
+      useNullAsDefault: true
     }
   }
 };
